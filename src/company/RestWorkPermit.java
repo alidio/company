@@ -32,7 +32,7 @@ public class RestWorkPermit {
         //Από τις 365 ημέρες του χρόνου
         int YearDays = 365;
         
-        //αφαιρώ όσες είναι η maxDate
+        //αφαιρώ όσες είναι η maxDate//να τη φτιαξω...
 
     }
     
