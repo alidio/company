@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Random;
 import model.Availableworkpermit;
 import model.Employee;
-import model.Workpermittype;
 
 public class RestWorkPermit {
     private Employee emp; //Στοιχεία υπαλλήλου
@@ -60,13 +59,14 @@ public class RestWorkPermit {
         cal.setTime(maxDate);
         //Στην τελευταία άδεια, προσθέτω ένα αριθμό ημερών μεταξύ της τελευταίας άδειας
         //και το τέλος του χρόνου
-        numdays = 1 + rnd.nextInt(365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);
-        cal.add(Calendar.DAY_OF_MONTH, numdays);
+        int daysAfterLastWorkpermit = 1 + rnd.nextInt(365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);
+        cal.add(Calendar.DAY_OF_MONTH, daysAfterLastWorkpermit);
         this.fromDate = cal.getTime();
         
         //Στην from date προσθέτω ένα τυχαίο άριθμό από το 1 έως το 
         //υπόλοιπο άδειας που έχει για να προσθέσω την άδεια.
-        cal.add(Calendar.DAY_OF_MONTH, 1+rnd.nextInt(ypoloipo));
+        numdays = 1+rnd.nextInt(ypoloipo);
+        cal.add(Calendar.DAY_OF_MONTH, numdays);
         this.toDate = cal.getTime();
     }
     
@@ -100,6 +100,38 @@ public class RestWorkPermit {
 
     public void setYpoloipo(int ypoloipo) {
         this.ypoloipo = ypoloipo;
+    }
+
+    public Availableworkpermit getAworkPermit() {
+        return AworkPermit;
+    }
+
+    public void setAworkPermit(Availableworkpermit AworkPermit) {
+        this.AworkPermit = AworkPermit;
+    }
+
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
+
+    public int getNumdays() {
+        return numdays;
+    }
+
+    public void setNumdays(int numdays) {
+        this.numdays = numdays;
     }
     
     

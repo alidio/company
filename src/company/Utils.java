@@ -208,5 +208,27 @@ public class Utils {
         
     }
     
+    
+    private void insWorkPermit(RestWorkPermit rwp){
+        if (!em.getTransaction().isActive()) {
+            em.getTransaction().begin();
+        }
+        try {
+            Workpermit w = new Workpermit();
+            w.setWorkPermitTypeId(rwp.getWorkPermitTypeId().getWorkPermitTypeId());
+            w.setEmployeeId(rwp.getEmp());
+            w.setApproved(null);
+            w.setNumdays(rwp.getNumdays());
+            w.setTodate(rwp.getToDate());
+            w.setFromdate(rwp.getFromDate());
+            em.persist(w);
+            
+            em.getTransaction().commit(); 
+        } catch (Exception ex) {
+            ex.printStackTrace();            
+            em.getTransaction().rollback();
+        }        
+    }
+    
 }
 

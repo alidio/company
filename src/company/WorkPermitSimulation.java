@@ -25,11 +25,10 @@ public class WorkPermitSimulation extends Thread{
     
     @Override
     public void run() {
-        System.out.println(emp.getLname() + " ---> Αρχή");
         
         //Έλεγχος εάν ο εργαζόμενος είναι προϊστάμενος (R4.A)
         if (u.chkManagerExist(emp)) {
-            System.out.println(emp.getLname() + " ---> IamManager");
+
             //Έγκριση - Απόρριψη αιτημάτων άδειας (R4.A)
             u.WorkpermitApproval(emp);
         }               
@@ -45,7 +44,6 @@ public class WorkPermitSimulation extends Thread{
         
         //Έλεγχος εάν υπάρχει υποβληθέν αίτημα που δεν έχει ελεγθεί (R4.C).
         if (!u.chkMyWorkpermit(emp)) {        
- System.out.println(emp.getLname() + " --- > ΔΕΝ υπάρχει υποβληθέν αίτημα που δεν έχει ελεγθεί (R4.C).");
             //Αν δεν υπάρχει άλλο αίτημα, το οποίο δεν έχει ελεγχθεί 
             //τότε υποβάλλει αίτημα άδειας με τυχαίο τρόπο
             
@@ -58,21 +56,15 @@ public class WorkPermitSimulation extends Thread{
             if (wp.size() > 0) {
                 //Εαν υπάρχει έστω και ένας τύπος άδειας που έχει υπόλοιπο
                 //υποβάλλω αίτημα άδειας στην τύχη.
-                for (RestWorkPermit r:wp) {
- System.out.println(r.getEmp().getFname() + " " + r.getWorkPermitTypeId().getWorkPermitTypeId().getWorkPermitTypeText()+" "+r.getYpoloipo()+" "+r.getMaxDate());
-                }
+
                 //Επιλέγω στην τύχη μία εγγραφή από τη λίστα wp
                 //όπου βρίσκονται τα είδη άδειας με τα υπόλοιπα 
                 //για κάθε άδεια.
-                RestWorkPermit rwp = wp.get(rnd.nextInt(wp.size()));      
- System.out.println("Στην Τύχη:" +rwp.getEmp().getFname() + " " + rwp.getWorkPermitTypeId().getWorkPermitTypeId().getWorkPermitTypeText()+" "+rwp.getYpoloipo()+" "+rwp.getMaxDate());
+                RestWorkPermit rwp = wp.get(rnd.nextInt(wp.size()));
                 
-                
- 
+                //Κάνω Εισαγωγή την άδεια στη βάση
+                u.insWorkPermit(rwp);
             }            
         }
-        
- System.out.println(emp.getLname() + " ---> Τέλος");
     }    
-    
 }
