@@ -106,7 +106,7 @@ public class Utils {
     //Η μέθοδος αυτή αναζητά τις προς έγριση άδειες των υφισταμένων του emp 
     //και με τυχαίο τρόπο τις ενημερώνει με 'έγκριση' ή 'απόρριψη'. 
     //Μετά τις καταχωρεί πάλι στη βάση.
-    public void WorkpermitApproval(Employee emp){
+    synchronized public void WorkpermitApproval(Employee emp){
                
         String sqlqry = "select w from Workpermit w, Employee e " +
                         "where w.employeeId = e " +
@@ -151,11 +151,7 @@ public class Utils {
         if (WPList.size()>0) return true; else  return false;
     }
 
- 
-
-
-
-///test-------------------------
+    
     public List<RestWorkPermit> getRestDaysByWPT(Employee emp){
                         
         //Aναζητεί πόσες ημέρες άδειας δικαιούται για κάθε τύπο άδειας
@@ -198,18 +194,14 @@ public class Utils {
                     sumNdays=(int)((Object[])sumNdaysList.get(0))[0];
                     maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
                 } else sumNdays=0;
-                    
-                wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));
-                
-                
-        }
-        
-        return wp;
-        
+
+                wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));                
+        }        
+        return wp;        
     }
     
     
-    private void insWorkPermit(RestWorkPermit rwp){
+    synchronized public void insRestWP(RestWorkPermit rwp){
         if (!em.getTransaction().isActive()) {
             em.getTransaction().begin();
         }
