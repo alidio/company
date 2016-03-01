@@ -75,9 +75,8 @@ public class Utils {
     }    
     
     //Απάντάει εάν υπάρχει ως Manager ο Employee της παραμέτρου
-    public boolean chkManagerExist(Employee emp) {
+    synchronized public boolean chkManagerExist(Employee emp) {
         boolean retval=false;
-        
         //ερωτημα
         String sqlqry = "select e from Employee e";
 
@@ -107,7 +106,6 @@ public class Utils {
     //και με τυχαίο τρόπο τις ενημερώνει με 'έγκριση' ή 'απόρριψη'. 
     //Μετά τις καταχωρεί πάλι στη βάση.
     synchronized public void WorkpermitApproval(Employee emp){
-               
         String sqlqry = "select w from Workpermit w, Employee e " +
                         "where w.employeeId = e " +
                         "and w.approved is null "+
@@ -136,8 +134,8 @@ public class Utils {
     //Ελέγχει, αν υπάρχει υποβληθέν από τον Employee αίτημα 
     //το οποίο δε έχει ελεγχθεί
     synchronized public boolean chkMyWorkpermit(Employee emp){
-        boolean retval=false;
         
+        boolean retval=false;        
         //ερωτημα
         String sqlqry = "select w from Workpermit w "
                       + "where w.employeeId = :emp "
@@ -153,7 +151,7 @@ public class Utils {
 
     
     synchronized public List<RestWorkPermit> getRestDaysByWPT(Employee emp){
-                        
+
         //Aναζητεί πόσες ημέρες άδειας δικαιούται για κάθε τύπο άδειας
         //για τον emp
         Query awpQuery = em.createQuery(  "select awp  " +
@@ -170,18 +168,22 @@ public class Utils {
         for (Availableworkpermit awp:AWPList){
             //Βρίσκει πόσες ημέρες έχει πάρει για κάθε τύπο άδειας που 
             //έχει δικαίωμα να δηλώσει     
+
             Query wpQuery = em.createQuery(  "select coalesce(sum(wp.numdays),0), " +
                                              "max(wp.todate) " +
                                              "from Workpermit wp " +
                                              "where wp.employeeId = :emp " +
-                                             "and wp.approved = 1 " +
                                              "and wp.workPermitTypeId = :wptype " +
+                                             "and wp.approved = 1 " +
                                              "group by wp.numdays ",int.class);
 
+                                             
+            
                 wpQuery.setParameter("emp", emp);
                 wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());
 
-                List sumNdaysList = wpQuery.getResultList();
+                List sumNdaysList = new ArrayList<>();
+                sumNdaysList = wpQuery.getResultList();
                 
                 //Προσθέτω στη λίστα το αντικείμενο που έχει μέσα του τον υπάλληλο,
                 //τον τύπο της άδειας και τις ημέρες που έχουν καταναλωθεί απο αυτόν τον
@@ -194,7 +196,7 @@ public class Utils {
                     sumNdays=(int)((Object[])sumNdaysList.get(0))[0];
                     maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
                 } else sumNdays=0;
-
+                
                 wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));                
         }        
         return wp;        
@@ -213,8 +215,7 @@ public class Utils {
             w.setNumdays(rwp.getNumdays());
             w.setTodate(rwp.getToDate());
             w.setFromdate(rwp.getFromDate());
-            em.persist(w);
-            
+            em.persist(w);            
             em.getTransaction().commit(); 
         } catch (Exception ex) {
             ex.printStackTrace();            

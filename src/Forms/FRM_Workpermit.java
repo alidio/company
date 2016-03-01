@@ -232,7 +232,14 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         prevwin.setEnabled(true);
         dispose();
     }//GEN-LAST:event_PBExitActionPerformed
-
+    
+    
+    //Εκκίνηση των threads.
+    //Για κάθε εργαζόμενο φτάχνεται ένα thread το οποίο αναλαμβάνει να εκτελέσει
+    //τις λειτουργίες οι οποίες περιγράφνται στις απαιτήσεις της εφαρμογής.
+    //Επίσης δημιουργείται ακόμα ένα thread το οποίο έχει σαν σκοπό να
+    //ενημερώνει την βασική οθόνη με τα αποτελέσματα των πεπραγμένων των
+    //άλλων threads. To thread αυτό τερματίζει όταν και όλα τα άλλα έχουν τερματίσει.
     private void PBStartSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStartSimActionPerformed
         //Aρχικοποίηση λίστας με τα Thread, ένα για κάθε employee
         WPSimulationList = new ArrayList<>();
@@ -248,6 +255,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             result.start();
         }
         
+        //Δημιουργία Thread το οποίο ελέγχει τα threads που εκτελούνται 
+        //και ενημερώνει την οθόνη.
         ThreadMonitor tmon = new ThreadMonitor(this,WPSimulationList);
         tmon.start();
         
@@ -308,14 +317,14 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     
     public void crtTBSygActionListener(){
         TBSyg.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
-           @Override
-           public void valueChanged(ListSelectionEvent event){
-              int row = TBSyg.getSelectedRow();
-              if (!(row<0)){
-                  selectedEmpId = (Employee) resultsSyg.get(row)[0];
-                  fillTBAnal();
-              }
-           }
+            @Override
+            public void valueChanged(ListSelectionEvent event){
+                int row = TBSyg.getSelectedRow();
+                if (!(row<0)){
+                    selectedEmpId = (Employee) resultsSyg.get(row)[0];
+                    fillTBAnal();
+                }
+            }
         });
     }
     

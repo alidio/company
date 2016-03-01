@@ -3,7 +3,6 @@ package Forms;
 import company.DBManager;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 public class FRM_Menu extends javax.swing.JFrame {
     private EntityManagerFactory emf;
@@ -13,7 +12,6 @@ public class FRM_Menu extends javax.swing.JFrame {
         //Αποσύνδεση από τη βάση δεδομένων.
         em.close();
     }    
-    //--------------------------------------------------------------------------
     
     
     public FRM_Menu() {
@@ -184,7 +182,7 @@ public class FRM_Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_MNIExitActionPerformed
 
     private void MNIWorkPermitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MNIWorkPermitActionPerformed
-   //Επιλέχθηκε το άνοιγμα της φόρμας διαχ/σης εργαζομένων
+        //Επιλέχθηκε το άνοιγμα της φόρμας διαχ/σης εργαζομένων
         //ανοίγω ένα νέο παράθυρο τύπου FRM_EmployeeManagement στο
         //οποίο σαν παραμέτρους στέλνω το τρέχον παράθυρο
         //με σκοπό να μπορώ από τον κώδικα του επόμενου παραθύρου να ελέγχω
@@ -209,9 +207,6 @@ public class FRM_Menu extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

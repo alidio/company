@@ -14,6 +14,7 @@ public class WorkPermitSimulation extends Thread{
     private Random rnd = new Random();
     private EntityManager em;
     private Utils u;
+    private boolean NextTimeFin=false;
     
     public WorkPermitSimulation(Employee emp) {
         super("WorkPermitSimulation");
@@ -24,48 +25,58 @@ public class WorkPermitSimulation extends Thread{
     }
     
     @Override
-    public void run() {
-System.out.println("Start... ----> Onoma:"+emp.getLname());        
+    public void run() {      
+        
+System.out.println("Start... ----> Onoma:"+emp.getLname());    
+
         //Έλεγχος εάν ο εργαζόμενος είναι προϊστάμενος (R4.A)
-        if (u.chkManagerExist(emp)) {
+        while(true) {
+            if (u.chkManagerExist(emp)) {
 
-            //Έγκριση - Απόρριψη αιτημάτων άδειας (R4.A)
-            u.WorkpermitApproval(emp);
-        }               
-        
-        //Αναμονή 10 έως 30 sec με τυχαίο τρόπο (R4.Β).
-        try {
-            //Αναμονή σε milisecond. 1000msec = 1sec
-            int i = 10000 + rnd.nextInt(20000);
-            sleep(i);            
-        } catch (InterruptedException ex) {
-            Logger.getLogger(WorkPermitSimulation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        //Έλεγχος εάν υπάρχει υποβληθέν αίτημα που δεν έχει ελεγθεί (R4.C).
-        if (!u.chkMyWorkpermit(emp)) {        
-            //Αν δεν υπάρχει άλλο αίτημα, το οποίο δεν έχει ελεγχθεί 
-            //τότε υποβάλλει αίτημα άδειας με τυχαίο τρόπο
-            
-            //Στη λίστα αυτή βρίκονται οι τύποι άδειας και τα υπόλοιπα αδείας για 
-            //τον συγκεκριμένο υπάλληλο.        
-            //Kρατά τα υπόλοιπα αδειών από κάθε τύπο άδειας
-            List<RestWorkPermit> wp = new ArrayList<>();
-            wp = u.getRestDaysByWPT(emp);
-            
-            if (wp.size() > 0) {
-                //Εαν υπάρχει έστω και ένας τύπος άδειας που έχει υπόλοιπο
-                //υποβάλλω αίτημα άδειας στην τύχη.
+                //Έγκριση - Απόρριψη αιτημάτων άδειας (R4.A)
+                u.WorkpermitApproval(emp);
+            }               
 
-                //Επιλέγω στην τύχη μία εγγραφή από τη λίστα wp
-                //όπου βρίσκονται τα είδη άδειας με τα υπόλοιπα 
-                //για κάθε άδεια.
-                RestWorkPermit rwp = wp.get(rnd.nextInt(wp.size()));
+            //Τερματισμός Thread
+            if (NextTimeFin) break;
+
+            //Αναμονή 10 έως 30 sec με τυχαίο τρόπο (R4.Β).
+            try {
+                //Αναμονή σε milisecond. 1000msec = 1sec
+                int i = 10000 + rnd.nextInt(20000);
+                sleep(i);            
+            } catch (InterruptedException ex) {
+                Logger.getLogger(WorkPermitSimulation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //Έλεγχος εάν υπάρχει υποβληθέν αίτημα που δεν έχει ελεγθεί (R4.C).
+            if (!u.chkMyWorkpermit(emp)) {        
+                //Αν δεν υπάρχει άλλο αίτημα, το οποίο δεν έχει ελεγχθεί 
+                //τότε υποβάλλει αίτημα άδειας με τυχαίο τρόπο
+
+                //Στη λίστα αυτή βρίκονται οι τύποι άδειας και τα υπόλοιπα αδείας για 
+                //τον συγκεκριμένο υπάλληλο.        
+                //Kρατά τα υπόλοιπα αδειών από κάθε τύπο άδειας
+                List<RestWorkPermit> wp = new ArrayList<>();
+                wp = u.getRestDaysByWPT(emp);
                 
-                //Κάνω Εισαγωγή την άδεια στη βάση
-                u.insRestWP(rwp);
-            }            
+                //Το Thread τερματίζει εάν δεν βρεθεί καμία γραμμή στη λίστα με 
+                //υπόλοιπα από κάποιο τύπο άδειας.              
+                if (wp.size() > 0) {
+                    //Εαν υπάρχει έστω και ένας τύπος άδειας που έχει υπόλοιπο
+                    //υποβάλλω αίτημα άδειας στην τύχη.
+
+                    //Επιλέγω στην τύχη μία εγγραφή από τη λίστα wp
+                    //όπου βρίσκονται τα είδη άδειας με τα υπόλοιπα 
+                    //για κάθε άδεια.
+                    RestWorkPermit rwp = wp.get(rnd.nextInt(wp.size()));
+
+                    //Κάνω Εισαγωγή την άδεια στη βάση
+                    u.insRestWP(rwp);
+                    
+                } else NextTimeFin=true; //!(wp.size()>0)
+            }
         }
-System.out.println("End... ----> Onoma:"+emp.getLname());                
-    }    
+System.out.println("End... ----> Onoma:"+emp.getLname());                        
+    }
 }

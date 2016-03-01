@@ -4,7 +4,6 @@ import Forms.FRM_Workpermit;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 
 
 public class ThreadMonitor extends Thread{
@@ -25,11 +24,12 @@ System.out.println("Starting... -->>> in ThreadMonitor <<<--");
         while (activeThread){
             activeThread = false;
             for (WorkPermitSimulation w:WPSimulationList){
-                System.out.println("Name:"+w.getId()+" // w.isAlive()="+w.isAlive());
+
                 activeThread = w.isAlive();
                 if (activeThread) break;
             }            
             win.fillTBSyg();
+            
             try {
                 sleep(5000);
             } catch (InterruptedException ex) {

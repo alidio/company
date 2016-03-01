@@ -11,7 +11,7 @@ import model.Employee;
 public class RestWorkPermit {
     private Employee emp; //Στοιχεία υπαλλήλου
     private Availableworkpermit AworkPermit; //Τι δικαιούται από άδεια
-    private int ypoloipo; //Υπόλοιπο άδεις 
+    private int ypoloipo; //Υπόλοιπο άδειας
     private Date maxDate; //Ημνία ΈΩΣ της τελευταίας άδειας
     private Date fromDate; //Η άδεια που θα καταχωρηθεί θα αρχίζει απο fromDate
     private Date toDate;  //Η άδεια που θα καταχωρηθεί θα αρχίζει απο toDate
@@ -25,8 +25,13 @@ public class RestWorkPermit {
         this.ypoloipo = AworkPermit.getAvailableDays() - sumNdays;
         
         //Υπολογισμός ημ/νίας έναρξης-λήξης της άδειας που θα καταχωρηθεί.        
-        calcFromToDate();
-      
+        calcFromToDate();      
+        
+System.out.println(emp.getLname() + " " + this.AworkPermit.getWorkPermitTypeId().getWorkPermitTypeText()+ 
+                                    " sumNdays=" + sumNdays +
+                                    "Υπόλοιπο άδειας=" + ypoloipo +
+                                    "maxDate=" + maxDate +        
+                                    "numdays=" + numdays);
     }
     
     //Εάν η ημερομηνία είναι null επιστρέφει 01/01/Τρέχοντος έτους
@@ -59,13 +64,13 @@ public class RestWorkPermit {
         cal.setTime(maxDate);
         //Στην τελευταία άδεια, προσθέτω ένα αριθμό ημερών μεταξύ της τελευταίας άδειας
         //και το τέλος του χρόνου
-        int daysAfterLastWorkpermit = 1 + rnd.nextInt(365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);
+        int daysAfterLastWorkpermit = 1 + rnd.nextInt(365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);        
         cal.add(Calendar.DAY_OF_MONTH, daysAfterLastWorkpermit);
         this.fromDate = cal.getTime();
         
         //Στην from date προσθέτω ένα τυχαίο άριθμό από το 1 έως το 
         //υπόλοιπο άδειας που έχει για να προσθέσω την άδεια.
-System.out.println("ypoloipo:"+ypoloipo);
+
         numdays = 1+rnd.nextInt(ypoloipo);
         cal.add(Calendar.DAY_OF_MONTH, numdays);
         this.toDate = cal.getTime();
