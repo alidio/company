@@ -1,6 +1,7 @@
 package Forms;
 
 import company.DBManager;
+import company.ThreadMonitor;
 import company.WorkPermitSimulation;
 import java.util.Date;
 import java.util.List;
@@ -182,25 +183,22 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(PBStartSim)
-                        .addGap(31, 31, 31)
-                        .addComponent(PBExtractXML)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 787, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jScrollPane1)))
-                        .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(PBExit)
+                                .addGap(10, 708, Short.MAX_VALUE)
+                                .addComponent(PBExit))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(PBStartSim)
+                                .addGap(31, 31, 31)
+                                .addComponent(PBExtractXML)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -236,17 +234,22 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_PBExitActionPerformed
 
     private void PBStartSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStartSimActionPerformed
-        //Aρχικοποίηση της λίστας.
+        //Aρχικοποίηση λίστας με τα Thread, ένα για κάθε employee
         WPSimulationList = new ArrayList<>();
         
+        //Για κάθε υπάλληλο δημιουργείται ένα Thread και όλα μαζί μπαινουν 
+        //σε μία λίστα.
         for (Object[] result : resultsSyg) {
             // Στοιχεία του υπαλλήλου
             WPSimulationList.add(new WorkPermitSimulation((Employee)result[0]));
-        }        
+        }
         //Εκκίνηση των Thread
         for (WorkPermitSimulation result : WPSimulationList) {
             result.start();
-        }                
+        }
+        
+        ThreadMonitor tmon = new ThreadMonitor(this,WPSimulationList);
+        tmon.start();
         
     }//GEN-LAST:event_PBStartSimActionPerformed
 
@@ -257,7 +260,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_formWindowClosing
 
-    private void fillTBSyg(){       
+    synchronized public void fillTBSyg(){
         // Ανακτούμε τα στοιχεία αδειών των υπαλλήλων της ΒΔ
         TypedQuery<Object[]> query = em.createQuery(
             "SELECT  e, " +
@@ -266,8 +269,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                     "e.email, \n" +
                     "COALESCE((select e1.managerId.fname from Employee e1 where e1 = e),' '), \n" +
                     "COALESCE((select e2.managerId.fname from Employee e2 where e2 = e),' '), \n" +
-                    "COALESCE((select sum(w1.numdays) from Workpermit w1 where w1.employeeId = e),0), \n" +
-                    "COALESCE((select sum(w2.numdays) from Workpermit w2 where w2.employeeId = e and w2.approved = 1),0) \n" +
+                    "COALESCE((select count(w1) from Workpermit w1 where w1.employeeId = e),0), \n" +
+                    "COALESCE((select count(w2) from Workpermit w2 where w2.employeeId = e and w2.approved = 1),0) \n" +
                     "FROM Employee e", Object[].class);
         
         resultsSyg = query.getResultList();

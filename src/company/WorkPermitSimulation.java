@@ -25,7 +25,7 @@ public class WorkPermitSimulation extends Thread{
     
     @Override
     public void run() {
-        
+System.out.println("Start... ----> Onoma:"+emp.getLname());        
         //Έλεγχος εάν ο εργαζόμενος είναι προϊστάμενος (R4.A)
         if (u.chkManagerExist(emp)) {
 
@@ -63,8 +63,9 @@ public class WorkPermitSimulation extends Thread{
                 RestWorkPermit rwp = wp.get(rnd.nextInt(wp.size()));
                 
                 //Κάνω Εισαγωγή την άδεια στη βάση
-                u.insWorkPermit(rwp);
+                u.insRestWP(rwp);
             }            
         }
+System.out.println("End... ----> Onoma:"+emp.getLname());                
     }    
 }

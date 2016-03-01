@@ -135,7 +135,7 @@ public class Utils {
     
     //Ελέγχει, αν υπάρχει υποβληθέν από τον Employee αίτημα 
     //το οποίο δε έχει ελεγχθεί
-    public boolean chkMyWorkpermit(Employee emp){
+    synchronized public boolean chkMyWorkpermit(Employee emp){
         boolean retval=false;
         
         //ερωτημα
@@ -152,7 +152,7 @@ public class Utils {
     }
 
     
-    public List<RestWorkPermit> getRestDaysByWPT(Employee emp){
+    synchronized public List<RestWorkPermit> getRestDaysByWPT(Employee emp){
                         
         //Aναζητεί πόσες ημέρες άδειας δικαιούται για κάθε τύπο άδειας
         //για τον emp

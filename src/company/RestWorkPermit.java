@@ -65,6 +65,7 @@ public class RestWorkPermit {
         
         //Στην from date προσθέτω ένα τυχαίο άριθμό από το 1 έως το 
         //υπόλοιπο άδειας που έχει για να προσθέσω την άδεια.
+System.out.println("ypoloipo:"+ypoloipo);
         numdays = 1+rnd.nextInt(ypoloipo);
         cal.add(Calendar.DAY_OF_MONTH, numdays);
         this.toDate = cal.getTime();
