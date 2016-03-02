@@ -18,7 +18,7 @@ public class ThreadMonitor extends Thread{
    
     @Override
     public void run() {
-System.out.println("Starting... -->>> in ThreadMonitor <<<--");
+System.out.println("ThreadMonitor Starting... ");
         
         boolean activeThread = true;        
         while (activeThread){
@@ -27,8 +27,11 @@ System.out.println("Starting... -->>> in ThreadMonitor <<<--");
 
                 activeThread = w.isAlive();
                 if (activeThread) break;
-            }            
+            }   
+
+            //Ενημέρωση των κεντρικών λιστών του παραθύρου.
             win.fillTBSyg();
+            win.fillTBAnal();
             
             try {
                 sleep(5000);
@@ -37,6 +40,6 @@ System.out.println("Starting... -->>> in ThreadMonitor <<<--");
             }
             
         }
-System.out.println("End!!! -->>> in ThreadMonitor <<<--");        
+System.out.println("ThreadMonitor End!!!");        
     }
 }

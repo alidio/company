@@ -270,6 +270,9 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     synchronized public void fillTBSyg(){
+        //Η γραμμή που έχει επιλεχθεί
+        int row = TBSyg.getSelectedRow();
+        
         // Ανακτούμε τα στοιχεία αδειών των υπαλλήλων της ΒΔ
         TypedQuery<Object[]> query = em.createQuery(
             "SELECT  e, " +
@@ -312,7 +315,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             Mdl.setValueAt(approved, i, 5);
             i++;
         }
-           
+        TBSyg.changeSelection(row, ICONIFIED, rootPaneCheckingEnabled, rootPaneCheckingEnabled);
     }
     
     public void crtTBSygActionListener(){
@@ -328,7 +331,13 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         });
     }
     
-    private void fillTBAnal(){       
+    public void fillTBAnal(){       
+        
+        int row = TBSyg.getSelectedRow();
+        if (!(row<0)){
+            selectedEmpId = (Employee) resultsSyg.get(row)[0];            
+        } else return;
+        
         // Ανακτούμε τα στοιχεία αδειών του υπαλλήλου που επιλέχθηκε
         TypedQuery<Object[]> query = em.createQuery(
               "SELECT   wpt.workPermitTypeText,\n" +

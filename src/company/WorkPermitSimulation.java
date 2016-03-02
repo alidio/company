@@ -20,12 +20,11 @@ public class WorkPermitSimulation extends Thread{
         super("WorkPermitSimulation");
         this.emp = emp;
         this.em = DBManager.em;
-        u = new Utils();
-        
+        u = new Utils();        
     }
     
     @Override
-    public void run() {      
+    public void run() {
         
 System.out.println("Start... ----> Onoma:"+emp.getLname());    
 
@@ -77,6 +76,6 @@ System.out.println("Start... ----> Onoma:"+emp.getLname());
                 } else NextTimeFin=true; //!(wp.size()>0)
             }
         }
-System.out.println("End... ----> Onoma:"+emp.getLname());                        
+System.out.println("End... ----> Onoma:"+emp.getLname());
     }
 }

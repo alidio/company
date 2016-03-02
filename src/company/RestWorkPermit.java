@@ -27,11 +27,13 @@ public class RestWorkPermit {
         //Υπολογισμός ημ/νίας έναρξης-λήξης της άδειας που θα καταχωρηθεί.        
         calcFromToDate();      
         
-System.out.println(emp.getLname() + " " + this.AworkPermit.getWorkPermitTypeId().getWorkPermitTypeText()+ 
-                                    " sumNdays=" + sumNdays +
-                                    "Υπόλοιπο άδειας=" + ypoloipo +
-                                    "maxDate=" + maxDate +        
-                                    "numdays=" + numdays);
+System.out.println("sumNdays=" + sumNdays +
+        " ypoloipo=" + ypoloipo + 
+        " maxDate=" + maxDate +
+        " numdays=" + numdays + 
+        " \t"+  emp.getLname() + 
+        "\t" +this.AworkPermit.getWorkPermitTypeId().getWorkPermitTypeText());
+
     }
     
     //Εάν η ημερομηνία είναι null επιστρέφει 01/01/Τρέχοντος έτους
@@ -60,15 +62,15 @@ System.out.println(emp.getLname() + " " + this.AworkPermit.getWorkPermitTypeId()
         //y->Τυχαίο νούμερο σε ημέρες ανάλογα με το υπόλοιπο του 
         //τύπου άδειας.
         
-        Calendar cal = Calendar.getInstance(); 
+        Calendar cal = Calendar.getInstance();
         cal.setTime(maxDate);
         //Στην τελευταία άδεια, προσθέτω ένα αριθμό ημερών μεταξύ της τελευταίας άδειας
         //και το τέλος του χρόνου
-        int daysAfterLastWorkpermit = 1 + rnd.nextInt(365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);        
+        int daysAfterLastWorkpermit = 1 + rnd.nextInt(365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);
         cal.add(Calendar.DAY_OF_MONTH, daysAfterLastWorkpermit);
         this.fromDate = cal.getTime();
         
-        //Στην from date προσθέτω ένα τυχαίο άριθμό από το 1 έως το 
+        //Στην from date προσθέτω ένα τυχαίο άριθμό από το 1 έως το
         //υπόλοιπο άδειας που έχει για να προσθέσω την άδεια.
 
         numdays = 1+rnd.nextInt(ypoloipo);

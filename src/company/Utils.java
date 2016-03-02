@@ -175,7 +175,7 @@ public class Utils {
                                              "where wp.employeeId = :emp " +
                                              "and wp.workPermitTypeId = :wptype " +
                                              "and wp.approved = 1 " +
-                                             "group by wp.numdays ",int.class);
+                                             "group by wp.employeeId ",int.class);
 
                                              
             
@@ -184,7 +184,7 @@ public class Utils {
 
                 List sumNdaysList = new ArrayList<>();
                 sumNdaysList = wpQuery.getResultList();
-                
+               
                 //Προσθέτω στη λίστα το αντικείμενο που έχει μέσα του τον υπάλληλο,
                 //τον τύπο της άδειας και τις ημέρες που έχουν καταναλωθεί απο αυτόν τον
                 //τυπο άδειας. Το υπόλοιπο υπολογίζεται αυτόματα μεσα στην κλάση.
@@ -197,7 +197,10 @@ public class Utils {
                     maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
                 } else sumNdays=0;
                 
-                wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));                
+                //εάν υπάρχει υπόλοιπο AvailableDays - sumNdays > 0
+                if (awp.getAvailableDays()>sumNdays) {
+                    wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));                
+                }
         }        
         return wp;        
     }
