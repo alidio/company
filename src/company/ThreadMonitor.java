@@ -25,13 +25,18 @@ System.out.println("ThreadMonitor Starting... ");
             activeThread = false;
             for (WorkPermitSimulation w:WPSimulationList){
 
+System.out.println(w.getName()+" activeThread="+activeThread);
+
                 activeThread = w.isAlive();
-                if (activeThread) break;
+                if (activeThread) break;               
+
             }   
 
             //Ενημέρωση των κεντρικών λιστών του παραθύρου.
-            win.fillTBSyg();
-            win.fillTBAnal();
+            //win.fillTBSyg();
+            //win.fillTBAnal();
+            win.updTables();
+            
             
             try {
                 sleep(5000);
