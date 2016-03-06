@@ -14,37 +14,40 @@ public class ThreadMonitor extends Thread{
         this.WPSimulationList = WPSimulationList;
         this.win = win;
     }
-
    
     @Override
     public void run() {
-System.out.println("ThreadMonitor Starting... ");
-        
-        boolean activeThread = true;        
-        while (activeThread){
+System.out.println("-------------------->Start Monitoring!!!");
+        boolean activeThread = true;
+        while (activeThread){            
             activeThread = false;
+            //Εάν έστω και ένα Thread είναι ενεργό συννεχίζει το
+            //monitor να παρακολουθεί τα Threads και να 
+            //ενημερώνει την οθόνη με τις αλλαγές.
+
+for (WorkPermitSimulation w:WPSimulationList) System.out.println(w.getName() + " active=" + w.isAlive());              
+            
             for (WorkPermitSimulation w:WPSimulationList){
-
-System.out.println(w.getName()+" activeThread="+activeThread);
-
                 activeThread = w.isAlive();
-                if (activeThread) break;               
-
+                if (activeThread) break;
             }   
+            
+System.out.println("before win.updTables-------------------->running...");            
 
             //Ενημέρωση των κεντρικών λιστών του παραθύρου.
-            //win.fillTBSyg();
-            //win.fillTBAnal();
             win.updTables();
             
-            
+System.out.println("after win.updTables-------------------->running...");
+
             try {
-                sleep(5000);
+                //Καθυστερηση 15 sec
+                sleep(15000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ThreadMonitor.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+            }            
         }
-System.out.println("ThreadMonitor End!!!");        
+        
+System.out.println("-------------------->Stop Monitoring...");
+
     }
 }

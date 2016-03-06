@@ -62,12 +62,23 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         }
     }
     
-    //Καθαρίζει τα δεδομένα του πίνακα
+    //Ενημερώνει τον συγκεντρωτικό και αναλυτικό πίνακα
     public void updTables() {
+        
+        int row = TBSyg.getSelectedRow();
+        //Συνγκεντρωτικός πίνακας
+System.out.println("before fillTBSyg()11111111111111111111111111111");
         fillTBSyg();
-        fillTBAnal();        
-    }
-   
+System.out.println("after fillTBSyg()22222222222222222222222222222");
+        if (!(row<0)){
+            TBSyg.setRowSelectionInterval(row, row);
+            selectedEmpId = (Employee) resultsSyg.get(row)[0];
+            //Αναλυτικός πίνακας
+System.out.println("before fillTBAnal()11111111111111111111111111111111");
+            fillTBAnal();
+System.out.println("after fillTBAnal()222222222222222222222222222222222");
+        }
+    }   
  
     /**
      * This method is called from within the constructor to initialize the form.
@@ -88,10 +99,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         PBStartSim = new javax.swing.JButton();
         PBExtractXML = new javax.swing.JButton();
         PBExit = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -186,57 +193,29 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(TBSyg.getModel());
-        jTable1.setColumnSelectionAllowed(true);
-        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane3.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setHeaderValue("Επώνυμο");
-            jTable1.getColumnModel().getColumn(1).setHeaderValue("Όνομα");
-            jTable1.getColumnModel().getColumn(2).setHeaderValue("E-mail");
-            jTable1.getColumnModel().getColumn(3).setHeaderValue("Προϊστάμενος");
-            jTable1.getColumnModel().getColumn(4).setHeaderValue("Αιτήματα Συνολικά");
-            jTable1.getColumnModel().getColumn(5).setHeaderValue("Αιτήματα Εγκεκριμένα");
-        }
-
-        jTable2.setModel(TBAnal.getModel());
-        jTable2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane4.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setHeaderValue("Είδος");
-            jTable2.getColumnModel().getColumn(1).setHeaderValue("Από");
-            jTable2.getColumnModel().getColumn(2).setHeaderValue("Έως");
-            jTable2.getColumnModel().getColumn(3).setHeaderValue("Ημέρες");
-            jTable2.getColumnModel().getColumn(4).setHeaderValue("Έγκριση");
-        }
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PBExit)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(PBStartSim)
-                                .addGap(31, 31, 31)
-                                .addComponent(PBExtractXML)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(PBStartSim)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 817, Short.MAX_VALUE))
+                        .addComponent(PBExtractXML)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(PBExit))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -247,22 +226,17 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PBStartSim)
-                    .addComponent(PBExtractXML))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(PBExit)
-                .addContainerGap())
+                    .addComponent(PBExtractXML)
+                    .addComponent(PBExit))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -300,8 +274,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         //Δημιουργία Thread το οποίο ελέγχει τα threads που εκτελούνται 
         //και ενημερώνει την οθόνη.
         ThreadMonitor tmon = new ThreadMonitor(this,WPSimulationList);
-        tmon.start();
-        
+        tmon.start();        
     }//GEN-LAST:event_PBStartSimActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -312,11 +285,6 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     synchronized public void fillTBSyg(){      
-
-                int row = TBSyg.getSelectedRow();
-System.out.println("row="+row);
-
-
         // Ανακτούμε τα στοιχεία αδειών των υπαλλήλων της ΒΔ
         TypedQuery<Object[]> query = em.createQuery(
             "SELECT  e, " +
@@ -330,20 +298,16 @@ System.out.println("row="+row);
                     "FROM Employee e", Object[].class);
         
         resultsSyg = query.getResultList();
-        
         //Καθαρισμός του πίνακα
         delTBLines(TBSyg);
-        
         //TableModel του TBSyg
         DefaultTableModel Mdl = (DefaultTableModel) TBSyg.getModel();
         //Ορισμός γραμμών TBSyg = γραμμές query
         Mdl.setRowCount(resultsSyg.size());
-        // Για κάθε υπάλληλο που υπάρχει στο ArrayList
-        
+        // Για κάθε υπάλληλο που υπάρχει στο ArrayList       
         int i=0;
         for (Object[] result : resultsSyg) {
             // Στοιχεία του υπαλλήλου
-
             String lname = (String) result[1];
             String fname = (String) result[2];
             String email = (String) result[3];
@@ -359,7 +323,6 @@ System.out.println("row="+row);
             Mdl.setValueAt(approved, i, 5);
             i++;
         }
-
     }
     
     public void crtTBSygActionListener(){
@@ -495,9 +458,5 @@ System.out.println("row="+row);
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables
 }

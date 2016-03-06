@@ -24,15 +24,8 @@ public class RestWorkPermit {
         this.maxDate = fixmaxDate(maxDate);
         this.ypoloipo = AworkPermit.getAvailableDays() - sumNdays;
         
-        //Υπολογισμός ημ/νίας έναρξης-λήξης της άδειας που θα καταχωρηθεί.        
-        calcFromToDate();      
-        
-System.out.println("sumNdays=" + sumNdays +
-        " ypoloipo=" + ypoloipo + 
-        " maxDate=" + maxDate +
-        " numdays=" + numdays + 
-        " \t"+  emp.getLname() + 
-        "\t" +this.AworkPermit.getWorkPermitTypeId().getWorkPermitTypeText());
+        //Υπολογισμός ημ/νίας έναρξης-λήξης της άδειας που θα καταχωρηθεί.
+        calcFromToDate();
 
     }
     
