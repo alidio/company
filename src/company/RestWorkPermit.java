@@ -1,5 +1,6 @@
 //Η κλάση αυτή χρησημοποιείται για να κρατά τα υπόλοιπα
-//αδειών από κάθε τύπο. 
+//αδειών για κάθε τύπο άδειας. Υπολογίζει αυτόματα τις ημερομηνίες από έως 
+//για την καταχώριση της άδειας.
 package company;
 
 import java.util.Calendar;
@@ -59,14 +60,13 @@ public class RestWorkPermit {
         cal.setTime(maxDate);
 
         //Στην τελευταία άδεια, προσθέτω ένα αριθμό ημερών μεταξύ της τελευταίας άδειας
-        //και το τέλος του χρόνου (Προσθέτω 1 για να μήν υπάρχει περίπτωση να το nextInt να πάρει 0)
+        //και το τέλος του χρόνου (Προσθέτω 1 για να μήν υπάρχει περίπτωση το nextInt να πάρει 0)
         int daysAfterLastWorkpermit = rnd.nextInt(1 + 365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);
         cal.add(Calendar.DAY_OF_MONTH, daysAfterLastWorkpermit);
         this.fromDate = cal.getTime();
         
         //Στην from date προσθέτω ένα τυχαίο άριθμό από το 1 έως το
         //υπόλοιπο άδειας που έχει για να προσθέσω την άδεια.
-
         numdays = 1+rnd.nextInt(ypoloipo);
         cal.add(Calendar.DAY_OF_MONTH, numdays);
         this.toDate = cal.getTime();
@@ -134,7 +134,5 @@ public class RestWorkPermit {
 
     public void setNumdays(int numdays) {
         this.numdays = numdays;
-    }
-    
-    
+    }   
 }

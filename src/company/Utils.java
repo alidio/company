@@ -116,15 +116,19 @@ public class Utils {
         //Εκτέλεση ερωτήματος
         List<Workpermit> WPList = qry.getResultList();
         
-        try {
+        try {          
+
             if (!em.getTransaction().isActive()) {
                 em.getTransaction().begin();
             }        
             for (Workpermit w:WPList){
-                em.persist(w);
                 w.setApproved(rnd.nextInt(2));
+                em.persist(w);
+System.out.println("Commit="+w.getEmployeeId().getLname()+" "+w.getWorkPermitTypeId().getWorkPermitTypeText()+" Numdays="+w.getNumdays());
             }
+            
             em.getTransaction().commit();
+            
         }catch (Exception ex) {
             ex.printStackTrace();            
             em.getTransaction().rollback();

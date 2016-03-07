@@ -31,14 +31,8 @@ for (WorkPermitSimulation w:WPSimulationList) System.out.println(w.getName() + "
                 activeThread = w.isAlive();
                 if (activeThread) break;
             }   
-            
-System.out.println("before win.updTables-------------------->running...");            
-
             //Ενημέρωση των κεντρικών λιστών του παραθύρου.
             win.updTables();
-            
-System.out.println("after win.updTables-------------------->running...");
-
             try {
                 //Καθυστερηση 15 sec
                 sleep(15000);

@@ -63,22 +63,17 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     }
     
     //Ενημερώνει τον συγκεντρωτικό και αναλυτικό πίνακα
-    public void updTables() {
-        
+    public void updTables() {        
         int row = TBSyg.getSelectedRow();
         //Συνγκεντρωτικός πίνακας
-System.out.println("before fillTBSyg()11111111111111111111111111111");
         fillTBSyg();
-System.out.println("after fillTBSyg()22222222222222222222222222222");
         if (!(row<0)){
             TBSyg.setRowSelectionInterval(row, row);
             selectedEmpId = (Employee) resultsSyg.get(row)[0];
             //Αναλυτικός πίνακας
-System.out.println("before fillTBAnal()11111111111111111111111111111111");
             fillTBAnal();
-System.out.println("after fillTBAnal()222222222222222222222222222222222");
         }
-    }   
+    }
  
     /**
      * This method is called from within the constructor to initialize the form.
@@ -291,7 +286,7 @@ System.out.println("after fillTBAnal()222222222222222222222222222222222");
                     "e.lname, \n" +
                     "e.fname, \n" +
                     "e.email, \n" +
-                    "COALESCE((select e1.managerId.fname from Employee e1 where e1 = e),' '), \n" +
+                    "COALESCE((select e1.managerId.lname from Employee e1 where e1 = e),' '), \n" +
                     "COALESCE((select e2.managerId.fname from Employee e2 where e2 = e),' '), \n" +
                     "COALESCE((select count(w1) from Workpermit w1 where w1.employeeId = e),0), \n" +
                     "COALESCE((select count(w2) from Workpermit w2 where w2.employeeId = e and w2.approved = 1),0) \n" +
