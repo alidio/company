@@ -35,7 +35,7 @@ for (WorkPermitSimulation w:WPSimulationList) System.out.println(w.getName() + "
             win.updTables();
             try {
                 //Καθυστερηση 15 sec
-                sleep(15000);
+                sleep(10000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ThreadMonitor.class.getName()).log(Level.SEVERE, null, ex);
             }            

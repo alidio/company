@@ -27,37 +27,39 @@ public class WorkPermitSimulation extends Thread{
     
     @Override
     public void run() {        
+
         //κεντρικός Βρόγχος επανάληψης
         while(true) {
-System.out.println("CyclesToWait="+CyclesToWait);                    
+            //Αναμονή 0 έως 5 δευτερόλεπτα για να μήν τρέχουν τα threds 
+            //παραλληλα
+            try {
+                sleep(1 + rnd.nextInt(5000));
+            } catch (InterruptedException ex) {
+                Logger.getLogger(WorkPermitSimulation.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+
             //Έλεγχος εάν ο εργαζόμενος είναι προϊστάμενος (R4.A)
-            if (u.chkManagerExist(emp)) {                
+            if (u.chkManagerExist(emp)) {
                 //Έγκριση - Απόρριψη αιτημάτων άδειας (R4.A)
-                u.WorkpermitApproval(emp);
-                
-                //Αναμονή 5 δευτερόλεπτων
-                try {
-                    sleep(5000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(WorkPermitSimulation.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                //Οσο εγκρίνει άδειες ο προϊστάμενος το CyclesToWait θα
+                //γίνεται 0 για να μην τερματίσει το thread
+                if (u.WorkpermitApproval(emp)) CyclesToWait=0;
             }
 
             //Τερματισμός Thread
             if (NextTimeFin) break;
             
-            //Αναμονή 10 έως 20 sec με τυχαίο τρόπο (R4.Β).
+            //Αναμονή 5 έως 20 sec με τυχαίο τρόπο (R4.Β).
             try {
                 //Αναμονή σε milisecond. 1000msec = 1sec
-                int i = 10000 + rnd.nextInt(10000);
+                int i = 5000 + rnd.nextInt(20000);
                 sleep(i);
             } catch (InterruptedException ex) {
                 Logger.getLogger(WorkPermitSimulation.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             //Έλεγχος εάν υπάρχει υποβληθέν αίτημα που δεν έχει ελεγθεί (R4.C).
-            if (!u.chkMyWorkpermit(emp)) {
-                
+            if (!u.chkMyWorkpermit(emp)) {                
                 //Αν δεν υπάρχει άλλο αίτημα, το οποίο δεν έχει ελεγχθεί 
                 //τότε υποβάλλει αίτημα άδειας με τυχαίο τρόπο
 
@@ -70,9 +72,11 @@ System.out.println("CyclesToWait="+CyclesToWait);
 
                 //Το Thread τερματίζει εάν δεν βρεθεί καμία γραμμή στη λίστα με
                 //υπόλοιπα από κάποιο τύπο άδειας.
-System.out.println("wp.size="+wp.size());
+
                 if (wp.size() > 0) {
                     
+                    //Οσο βρίσκει άδειες πρός υποβολή δεν θα μετράει 
+                    //κυκλους για να σταματήσει
                     CyclesToWait = 0;
                     
                     //Εαν υπάρχει έστω και ένας τύπος άδειας που έχει υπόλοιπο
@@ -81,22 +85,16 @@ System.out.println("wp.size="+wp.size());
                     //Επιλέγω στην τύχη μία εγγραφή από τη λίστα wp
                     //όπου βρίσκονται τα είδη άδειας με τα υπόλοιπα 
                     //για κάθε άδεια.
-
                     RestWorkPermit rwp = wp.get(rnd.nextInt(wp.size()));
 
                     //Κάνω Εισαγωγή την άδεια στη βάση                    
-System.out.println("Κάνω Εισαγωγή:"+rwp.getEmp().getLname()+"\n"+
-        rwp.getAworkPermit().getWorkPermitTypeId().getWorkPermitTypeText()+"\n"
-        + " Απο:"+rwp.getFromDate()+
-        "\n Εως:"+rwp.getToDate()+
-        "\n Ημέρες"+rwp.getNumdays()+
-        "\n Υπόλοιπο:"+rwp.getYpoloipo());
-
                     u.insRestWP(rwp);                    
-                } 
+                
+                }else NextTimeFin=true; //Δεν έχει υπολοιπο από κανένα τύπο άδειας
+                
             }else {                
                 //Τερμάτισε σε WaitCycles κύκλους
-                if (WaitCycles < CyclesToWait++) NextTimeFin=true; 
+                if (WaitCycles <= ++CyclesToWait) NextTimeFin=true; 
             }
                 
         }

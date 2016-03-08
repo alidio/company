@@ -1,10 +1,13 @@
 package company;
 
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
@@ -106,7 +109,10 @@ public class Utils {
     //Η μέθοδος αυτή αναζητά τις προς έγριση άδειες των υφισταμένων του emp 
     //και με τυχαίο τρόπο τις ενημερώνει με 'έγκριση' ή 'απόρριψη'. 
     //Μετά τις καταχωρεί πάλι στη βάση.
-    synchronized public void WorkpermitApproval(Employee emp){
+    synchronized public boolean WorkpermitApproval(Employee emp){
+        
+        boolean retval=false;
+        
         String sqlqry = "select w from Workpermit w, Employee e " +
                         "where w.employeeId = e " +
                         "and w.approved is null "+
@@ -117,26 +123,36 @@ public class Utils {
         //Εκτέλεση ερωτήματος
         List<Workpermit> WPList = qry.getResultList();
         
-        EntityTransaction tx = em.getTransaction();
-        try {
-            if (!em.getTransaction().isActive()) {
-                //em.getTransaction().begin();
-                tx = em.getTransaction();
-                tx.begin();
-            }
-            for (Workpermit w:WPList){
+        EntityTransaction tx = em.getTransaction();        
+       
+        for (Workpermit w:WPList){
+            try {
+                if (!em.getTransaction().isActive()) {
+                    //em.getTransaction().begin();
+                    tx = em.getTransaction();
+                    tx.begin();
+                }
                 w.setApproved(rnd.nextInt(2));
                 em.persist(w);
-System.out.println("persist="+w.getEmployeeId().getLname()+" "+w.getWorkPermitTypeId().getWorkPermitTypeText()+" Numdays="+w.getNumdays());
-                //em.getTransaction().commit();
+                
+                //Εάν έχει βρεί άδειες πρός έγγριση επιστρέφει true
+                //για τον καλύτερο συντονισμό των Τhreds
+                retval=true;
+                tx.commit();
+            }catch (Exception ex) {
+                ex.printStackTrace();
+                tx.rollback();
             }
-            tx.commit();            
-        }catch (Exception ex) {
-System.out.println("ESKASE EDW!!!");
-            ex.printStackTrace();
-            //em.getTransaction().rollback();
-            tx.rollback();
+                
+            //Προσθέτω καθυστέρηση 1sec για πιό απρόσκοπτη λειτουργία 
+            //της βάσης δεδομένων
+            try {
+                sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        return retval;
     }
     
     //Ελέγχει, αν υπάρχει υποβληθέν από τον Employee αίτημα 
