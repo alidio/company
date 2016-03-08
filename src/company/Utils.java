@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import model.*;
 
@@ -116,23 +117,26 @@ public class Utils {
         //Εκτέλεση ερωτήματος
         List<Workpermit> WPList = qry.getResultList();
         
-        try {          
-
+        EntityTransaction tx = em.getTransaction();
+        try {
             if (!em.getTransaction().isActive()) {
-                em.getTransaction().begin();
-            }        
+                //em.getTransaction().begin();
+                tx = em.getTransaction();
+                tx.begin();
+            }
             for (Workpermit w:WPList){
                 w.setApproved(rnd.nextInt(2));
                 em.persist(w);
-System.out.println("Commit="+w.getEmployeeId().getLname()+" "+w.getWorkPermitTypeId().getWorkPermitTypeText()+" Numdays="+w.getNumdays());
+System.out.println("persist="+w.getEmployeeId().getLname()+" "+w.getWorkPermitTypeId().getWorkPermitTypeText()+" Numdays="+w.getNumdays());
+                //em.getTransaction().commit();
             }
-            
-            em.getTransaction().commit();
-            
+            tx.commit();            
         }catch (Exception ex) {
-            ex.printStackTrace();            
-            em.getTransaction().rollback();
-        } 
+System.out.println("ESKASE EDW!!!");
+            ex.printStackTrace();
+            //em.getTransaction().rollback();
+            tx.rollback();
+        }
     }
     
     //Ελέγχει, αν υπάρχει υποβληθέν από τον Employee αίτημα 
@@ -155,7 +159,6 @@ System.out.println("Commit="+w.getEmployeeId().getLname()+" "+w.getWorkPermitTyp
 
     
     synchronized public List<RestWorkPermit> getRestDaysByWPT(Employee emp){
-
         //Aναζητεί πόσες ημέρες άδειας δικαιούται για κάθε τύπο άδειας
         //για τον emp
         Query awpQuery = em.createQuery(  "select awp  " +
@@ -171,17 +174,14 @@ System.out.println("Commit="+w.getEmployeeId().getLname()+" "+w.getWorkPermitTyp
         
         for (Availableworkpermit awp:AWPList){
             //Βρίσκει πόσες ημέρες έχει πάρει για κάθε τύπο άδειας που 
-            //έχει δικαίωμα να δηλώσει     
-
+            //έχει δικαίωμα να δηλώσει
             Query wpQuery = em.createQuery(  "select coalesce(sum(wp.numdays),0), " +
                                              "max(wp.todate) " +
                                              "from Workpermit wp " +
                                              "where wp.employeeId = :emp " +
                                              "and wp.workPermitTypeId = :wptype " +
                                              "and wp.approved = 1 " +
-                                             "group by wp.employeeId ",int.class);
-
-                                             
+                                             "group by wp.employeeId ",int.class);                                             
             
                 wpQuery.setParameter("emp", emp);
                 wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());
@@ -206,7 +206,7 @@ System.out.println("Commit="+w.getEmployeeId().getLname()+" "+w.getWorkPermitTyp
                     wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));                
                 }
         }        
-        return wp;        
+        return wp;
     }
     
     
@@ -222,10 +222,10 @@ System.out.println("Commit="+w.getEmployeeId().getLname()+" "+w.getWorkPermitTyp
             w.setNumdays(rwp.getNumdays());
             w.setTodate(rwp.getToDate());
             w.setFromdate(rwp.getFromDate());
-            em.persist(w);            
-            em.getTransaction().commit(); 
+            em.persist(w);
+            em.getTransaction().commit();
         } catch (Exception ex) {
-            ex.printStackTrace();            
+            ex.printStackTrace();
             em.getTransaction().rollback();
         }        
     }
