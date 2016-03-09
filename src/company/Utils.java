@@ -189,46 +189,58 @@ public class Utils {
         //Kρατά τα υπόλοιπα αδειών από κάθε τύπο άδειας
         List<RestWorkPermit> wp = new ArrayList<>();
         
+        //Θα βρώ την τελευταία ημερομηνια (ΕΩΣ) που πήρε άδεια
+        Date maxDate=null;
         for (Availableworkpermit awp:AWPList){
             //Βρίσκει πόσες ημέρες έχει πάρει για κάθε τύπο άδειας που 
-            //έχει δικαίωμα να δηλώσει
-//            Query wpQuery = em.createQuery(  "select coalesce(sum(wp.numdays),0), " +
-//                                             "max(wp.todate) " +
-//                                             "from Workpermit wp " +
-//                                             "where wp.employeeId = :emp " +
-//                                             "and wp.workPermitTypeId = :wptype " +
-//                                             "and wp.approved = 1 " +
-//                                             "group by wp.employeeId ",int.class);                                             
-System.out.println("00000000000000000");            
+            //έχει δικαίωμα να δηλώσει.
+            //To select αυτό επιστρέφει την μεγαλύτερη ημερομηνία που πήρε άδεια
+            //από κάθε τύπο άδειας που έχει δικαίωμα να πάρει.
+            
             Query wpQuery = em.createQuery(  "select coalesce(sum(wp.numdays),0), " +
-                                             "(select max(wp1.todate) " +
-                                                "from Workpermit wp1  " +
-                                                "where  wp1.approved = 1  and wp1.employeeId = :emp " +
-                                                "group by wp1.employeeId) " +
+                                             "max(wp.todate) " +
                                              "from Workpermit wp " +
                                              "where wp.employeeId = :emp " +
                                              "and wp.workPermitTypeId = :wptype " +
                                              "and wp.approved = 1 " +
                                              "group by wp.employeeId ",int.class);
+
+//            Query wpQuery = em.createQuery("select \n" +
+//                                           " (select coalesce(sum(wp.numdays),0) \n" +
+//                                           "    from Workpermit wp \n" +
+//                                           "   where wp.employeeId = e \n" +
+//                                           "     and wp.workPermitTypeId = :wptype \n" +
+//                                           "     and wp.approved = 1 \n" +
+//                                           "group by wp.employeeId), \n" +
+//                                           " (select max(wp1.todate) \n" +
+//                                           "    from Workpermit wp1   \n" +
+//                                           "   where wp1.approved = 1 \n" +
+//                                           "     and wp1.employeeId = e \n" +
+//                                           "group by wp1.employeeId) \n" +
+//                                           " from Employee e \n" +
+//                                           "where e = :emp",int.class);
             
                 wpQuery.setParameter("emp", emp);
                 wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());
-System.out.println("1111111111111111111");
+
                 List sumNdaysList = new ArrayList<>();
-System.out.println("2222222222222222222");                
+
                 sumNdaysList = wpQuery.getResultList();
-System.out.println("3333333333333333333");               
+
                 //Προσθέτω στη λίστα το αντικείμενο που έχει μέσα του τον υπάλληλο,
                 //τον τύπο της άδειας και τις ημέρες που έχουν καταναλωθεί απο αυτόν τον
                 //τυπο άδειας. Το υπόλοιπο υπολογίζεται αυτόματα μεσα στην κλάση.
                 //Επίσης στη λίστα βάζω την μεγαλύτερη ημερομηνία που έχει παρθεί η
                 //άδεια για να υπολογίσω τη νέα άδεια απο την ημέρα αυτή και μετά.
-                int sumNdays;
-                Date maxDate=null;
+                int sumNdays;                
                 if (!sumNdaysList.isEmpty()) {
                     sumNdays=(int)((Object[])sumNdaysList.get(0))[0];
-                    maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
-System.out.println("maxDat="+maxDate);
+                    //maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
+                    
+                    if (maxDate==null)maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
+                    else if (!maxDate.after((Date)((Object[])sumNdaysList.get(0))[1])) 
+                        maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
+                    
                 } else sumNdays=0;
                 
                 //εάν υπάρχει υπόλοιπο AvailableDays - sumNdays > 0

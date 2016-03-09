@@ -61,7 +61,14 @@ public class RestWorkPermit {
 
         //Στην τελευταία άδεια, προσθέτω ένα αριθμό ημερών μεταξύ της τελευταίας άδειας
         //και το τέλος του χρόνου (Προσθέτω 1 για να μήν υπάρχει περίπτωση το nextInt να πάρει 0)
-        int daysAfterLastWorkpermit = rnd.nextInt(1 + 365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);
+//System.out.println("1111111----->>>" + (1 + 365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo));
+//        int daysAfterLastWorkpermit = rnd.nextInt(1 + 365 - cal.get(Calendar.DAY_OF_YEAR) - ypoloipo);
+
+//ΦΙΧ ΣΧΟΛΙΑ....        
+        
+        //15 days
+        int daysAfterLastWorkpermit = rnd.nextInt(15);
+        
         cal.add(Calendar.DAY_OF_MONTH, daysAfterLastWorkpermit);
         this.fromDate = cal.getTime();
         
