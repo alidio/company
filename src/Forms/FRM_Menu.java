@@ -42,8 +42,6 @@ public class FRM_Menu extends javax.swing.JFrame {
         MNIEmployes = new javax.swing.JMenuItem();
         MNUWorkpermit = new javax.swing.JMenu();
         MNIWorkPermit = new javax.swing.JMenuItem();
-        MNUHelp = new javax.swing.JMenu();
-        MNIXml = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -58,7 +56,7 @@ public class FRM_Menu extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Εφαρμογή Διαχείρισης Αδειών Προσωπικου");
+        jLabel1.setText("Εφαρμογή Διαχείρισης Αδειών Προσωπικού");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -115,13 +113,6 @@ public class FRM_Menu extends javax.swing.JFrame {
         MNUWorkpermit.add(MNIWorkPermit);
 
         jMenuBar1.add(MNUWorkpermit);
-
-        MNUHelp.setText("Βοηθητικά");
-
-        MNIXml.setText("Εξαγωγή Αιτημάτων σε XML");
-        MNUHelp.add(MNIXml);
-
-        jMenuBar1.add(MNUHelp);
 
         setJMenuBar(jMenuBar1);
 
@@ -244,10 +235,8 @@ public class FRM_Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem MNIEmployes;
     private javax.swing.JMenuItem MNIExit;
     private javax.swing.JMenuItem MNIWorkPermit;
-    private javax.swing.JMenuItem MNIXml;
     private javax.swing.JMenu MNUEmployee;
     private javax.swing.JMenu MNUFile;
-    private javax.swing.JMenu MNUHelp;
     private javax.swing.JMenu MNUWorkpermit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

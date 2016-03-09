@@ -17,7 +17,6 @@ public class ThreadMonitor extends Thread{
    
     @Override
     public void run() {
-System.out.println("-------------------->Start Monitoring!!!");
         boolean activeThread = true;
         while (activeThread){            
             activeThread = false;
@@ -25,7 +24,14 @@ System.out.println("-------------------->Start Monitoring!!!");
             //monitor να παρακολουθεί τα Threads και να 
             //ενημερώνει την οθόνη με τις αλλαγές.
 
-for (WorkPermitSimulation w:WPSimulationList) System.out.println(w.getName() + " active=" + w.isAlive());              
+            
+            //Ενημέρωση της οθόνης με την πληροφορία εάν τα Threads είναι ενεργά
+            for (WorkPermitSimulation w:WPSimulationList) {
+                //Ενημέρωση του TextArea της οθόνης            
+                String str = (w.isAlive()) ? "Ενεργό" : "Σταματημένο";
+                win.updSimLog(w.getName() + ":" + str + "\n");                
+            }
+            win.updSimLog("-----------------------------------------------\n");
             
             for (WorkPermitSimulation w:WPSimulationList){
                 activeThread = w.isAlive();
@@ -33,6 +39,7 @@ for (WorkPermitSimulation w:WPSimulationList) System.out.println(w.getName() + "
             }   
             //Ενημέρωση των κεντρικών λιστών του παραθύρου.
             win.updTables();
+            
             try {
                 //Καθυστερηση 15 sec
                 sleep(10000);
@@ -40,8 +47,5 @@ for (WorkPermitSimulation w:WPSimulationList) System.out.println(w.getName() + "
                 Logger.getLogger(ThreadMonitor.class.getName()).log(Level.SEVERE, null, ex);
             }            
         }
-        
-System.out.println("-------------------->Stop Monitoring...");
-
     }
 }

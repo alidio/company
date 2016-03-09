@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import model.*;
 
 
@@ -191,20 +192,32 @@ public class Utils {
         for (Availableworkpermit awp:AWPList){
             //Βρίσκει πόσες ημέρες έχει πάρει για κάθε τύπο άδειας που 
             //έχει δικαίωμα να δηλώσει
+//            Query wpQuery = em.createQuery(  "select coalesce(sum(wp.numdays),0), " +
+//                                             "max(wp.todate) " +
+//                                             "from Workpermit wp " +
+//                                             "where wp.employeeId = :emp " +
+//                                             "and wp.workPermitTypeId = :wptype " +
+//                                             "and wp.approved = 1 " +
+//                                             "group by wp.employeeId ",int.class);                                             
+System.out.println("00000000000000000");            
             Query wpQuery = em.createQuery(  "select coalesce(sum(wp.numdays),0), " +
-                                             "max(wp.todate) " +
+                                             "(select max(wp1.todate) " +
+                                                "from Workpermit wp1  " +
+                                                "where  wp1.approved = 1  and wp1.employeeId = :emp " +
+                                                "group by wp1.employeeId) " +
                                              "from Workpermit wp " +
                                              "where wp.employeeId = :emp " +
                                              "and wp.workPermitTypeId = :wptype " +
                                              "and wp.approved = 1 " +
-                                             "group by wp.employeeId ",int.class);                                             
+                                             "group by wp.employeeId ",int.class);
             
                 wpQuery.setParameter("emp", emp);
                 wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());
-
+System.out.println("1111111111111111111");
                 List sumNdaysList = new ArrayList<>();
+System.out.println("2222222222222222222");                
                 sumNdaysList = wpQuery.getResultList();
-               
+System.out.println("3333333333333333333");               
                 //Προσθέτω στη λίστα το αντικείμενο που έχει μέσα του τον υπάλληλο,
                 //τον τύπο της άδειας και τις ημέρες που έχουν καταναλωθεί απο αυτόν τον
                 //τυπο άδειας. Το υπόλοιπο υπολογίζεται αυτόματα μεσα στην κλάση.
@@ -215,6 +228,7 @@ public class Utils {
                 if (!sumNdaysList.isEmpty()) {
                     sumNdays=(int)((Object[])sumNdaysList.get(0))[0];
                     maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
+System.out.println("maxDat="+maxDate);
                 } else sumNdays=0;
                 
                 //εάν υπάρχει υπόλοιπο AvailableDays - sumNdays > 0
@@ -244,6 +258,14 @@ public class Utils {
             ex.printStackTrace();
             em.getTransaction().rollback();
         }        
+    }
+
+    public void exportWorkpermits(WorkpermitXML workpermitXMLWriter){
+        TypedQuery<Workpermit> allWorkpermitsQuery = 
+                em.createNamedQuery("Workpermit.findAll", Workpermit.class);
+        List<Workpermit> workpermitResults = allWorkpermitsQuery.getResultList();                    
+        workpermitXMLWriter.writeXML(workpermitResults);
+        System.out.println ( "Το αρχείο XML δημιουργήθηκε με επιτυχία στο C:\\temp" );                    
     }
     
 }

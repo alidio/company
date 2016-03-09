@@ -19,11 +19,17 @@ public class WorkPermitSimulation extends Thread{
     private int CyclesToWait=0; //Τερματισμός ύστερα από WaitCycles κύκλους
         
     public WorkPermitSimulation(Employee emp) {
-        super("WorkPermitSimulation "+emp.getLname());
+        super("Thread-"+emp.getLname());
         this.emp = emp;
         this.em = DBManager.em;
         u = new Utils();
     }
+    
+    
+    //Καλείται για να διακόψει τη λειτουργία του thread.
+    public void StopRun() {
+        NextTimeFin = true;
+    }    
     
     @Override
     public void run() {        
@@ -72,7 +78,6 @@ public class WorkPermitSimulation extends Thread{
 
                 //Το Thread τερματίζει εάν δεν βρεθεί καμία γραμμή στη λίστα με
                 //υπόλοιπα από κάποιο τύπο άδειας.
-
                 if (wp.size() > 0) {
                     
                     //Οσο βρίσκει άδειες πρός υποβολή δεν θα μετράει 

@@ -49,18 +49,6 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="MNUHelp">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="&#x392;&#x3bf;&#x3b7;&#x3b8;&#x3b7;&#x3c4;&#x3b9;&#x3ba;&#x3ac;"/>
-          </Properties>
-          <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="MNIXml">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="&#x395;&#x3be;&#x3b1;&#x3b3;&#x3c9;&#x3b3;&#x3ae; &#x391;&#x3b9;&#x3c4;&#x3b7;&#x3bc;&#x3ac;&#x3c4;&#x3c9;&#x3bd; &#x3c3;&#x3b5; XML"/>
-              </Properties>
-            </MenuItem>
-          </SubComponents>
-        </Menu>
       </SubComponents>
     </Menu>
   </NonVisualComponents>
@@ -159,7 +147,7 @@
           <Font name="Tahoma" size="24" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="&#x395;&#x3c6;&#x3b1;&#x3c1;&#x3bc;&#x3bf;&#x3b3;&#x3ae; &#x394;&#x3b9;&#x3b1;&#x3c7;&#x3b5;&#x3af;&#x3c1;&#x3b9;&#x3c3;&#x3b7;&#x3c2; &#x391;&#x3b4;&#x3b5;&#x3b9;&#x3ce;&#x3bd; &#x3a0;&#x3c1;&#x3bf;&#x3c3;&#x3c9;&#x3c0;&#x3b9;&#x3ba;&#x3bf;&#x3c5;"/>
+        <Property name="text" type="java.lang.String" value="&#x395;&#x3c6;&#x3b1;&#x3c1;&#x3bc;&#x3bf;&#x3b3;&#x3ae; &#x394;&#x3b9;&#x3b1;&#x3c7;&#x3b5;&#x3af;&#x3c1;&#x3b9;&#x3c3;&#x3b7;&#x3c2; &#x391;&#x3b4;&#x3b5;&#x3b9;&#x3ce;&#x3bd; &#x3a0;&#x3c1;&#x3bf;&#x3c3;&#x3c9;&#x3c0;&#x3b9;&#x3ba;&#x3bf;&#x3cd;"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">

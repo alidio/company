@@ -2,7 +2,10 @@ package Forms;
 
 import company.DBManager;
 import company.ThreadMonitor;
+import company.Utils;
 import company.WorkPermitSimulation;
+import company.WorkpermitXML;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -22,6 +25,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private JFrame prevwin; //Προηγούμενο παράθυρο για επιστροφή στο menu
     private EntityManager em;
     private Employee selectedEmpId; //Ο Εργαζόμενος που επιλέγει ο χρήστης
+    private Utils u;
     
     //Τα περιεχόμενα του πίνακα με τα συγκεντρωτικά στοιχεία των εργαζόμενων
     private List<Object[]> resultsSyg;
@@ -49,7 +53,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         
         //Ενεργοποίηση actionListener για την επιλογή 
         //γραμμής στον συγκεντρωτικό πίνακα
-        crtTBSygActionListener();
+        crtTBSygActionListener();        
         
     }
 
@@ -94,6 +98,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         PBStartSim = new javax.swing.JButton();
         PBExtractXML = new javax.swing.JButton();
         PBExit = new javax.swing.JButton();
+        SimLog = new java.awt.TextArea();
+        PBStopSimActionPerformed = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -188,6 +194,13 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             }
         });
 
+        PBStopSimActionPerformed.setText("Τέλος Προσομοίωσης");
+        PBStopSimActionPerformed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PBStopSimActionPerformedActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -197,20 +210,30 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(PBStartSim)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(PBStopSimActionPerformed)
+                        .addGap(78, 78, 78)
                         .addComponent(PBExtractXML)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(PBExit))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addComponent(SimLog, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(PBExit)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -218,19 +241,23 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addGap(33, 33, 33)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PBStartSim)
                     .addComponent(PBExtractXML)
-                    .addComponent(PBExit))
+                    .addComponent(PBStopSimActionPerformed))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SimLog, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(PBExit)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -252,8 +279,12 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     //ενημερώνει την βασική οθόνη με τα αποτελέσματα των πεπραγμένων των
     //άλλων threads. To thread αυτό τερματίζει όταν και όλα τα άλλα έχουν τερματίσει.
     private void PBStartSimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStartSimActionPerformed
+        
+        //Καθαρισμός των σχολίων της οθόνης για τα Threads
+        SimLog.setText("");
+        
         //Aρχικοποίηση λίστας με τα Thread, ένα για κάθε employee
-        WPSimulationList = new ArrayList<>();
+        WPSimulationList = new ArrayList<>();                
         
         //Για κάθε υπάλληλο δημιουργείται ένα Thread και όλα μαζί μπαινουν 
         //σε μία λίστα.
@@ -268,8 +299,9 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         
         //Δημιουργία Thread το οποίο ελέγχει τα threads που εκτελούνται 
         //και ενημερώνει την οθόνη.
-        ThreadMonitor tmon = new ThreadMonitor(this,WPSimulationList);
+        ThreadMonitor tmon = new ThreadMonitor(this,WPSimulationList);       
         tmon.start();        
+        
     }//GEN-LAST:event_PBStartSimActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -381,64 +413,30 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             Mdl.setValueAt(hmeres, i, 3);
             Mdl.setValueAt(egrisi, i, 4);
             i++;
-        }       
-        
+        }
     }
     
-    
+    public void updSimLog(String str){
+        SimLog.append(str);
+    }
     private void PBExtractXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExtractXMLActionPerformed
-//        
-//        int selectedRow = TBSyg.getSelectedRow();
-//        
-//        if (selectedRow == -1) {
-//            JOptionPane.showMessageDialog(this, "ExportPlayListIsNotSelected", "NoRecordIsSelected",
-//                    JOptionPane.WARNING_MESSAGE);
-//        } else {
-//            selectedRow = TBSyg.convertRowIndexToModel(selectedRow);
-//            playList = playListList.get(selectedRow);
-//
-//            //Δημιουργούμε παράθυρο επιλογέα αρχείου
-//            JFileChooser chooser = new JFileChooser();
-//            //Φιλτράρουμε ώστε ο τύπος αρχείου να είναι μόνο xml
-//            XMLFileFilter fileFilterXML = new XMLFileFilter();
-//            chooser.setFileFilter(fileFilterXML);
-//
-//            //ο τύπος του παραθύρου να είναι αποθήκευσης
-//            int selection = chooser.showSaveDialog(this);
-//
-//            //Εάν επιλέχθηκε Αποθήκευση
-//            if (selection == JFileChooser.APPROVE_OPTION) {
-//
-//                //το όνομα που δόθηκε στο αρχείο
-//                File selectedFile = chooser.getSelectedFile();
-//
-//                if (selectedFile != null) {
-//                    //Το αρχείο να έχει .xml extension
-//                    if (!selectedFile.getName().toLowerCase().endsWith(".xml")) {
-//                        selectedFile = new File(selectedFile + ".xml");
-//                    }
-//                    //Εάν το όνομα του αρχείου υπάρχει ήδη στην επιλεγμένη τοποθεσία για αποθήκευση
-//                    if (selectedFile.exists()) {
-//                        int confirm = JOptionPane.showConfirmDialog(this,"FileAlreadyExists","Replace", 
-//                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-//                        if (confirm != JOptionPane.YES_OPTION) {
-//                            return;
-//                        }
-//                    }
-//
-//                    if (loggerUtil.isDebugEnabled()) {
-//                        loggerUtil.debug("Exporting PlayList: " + playList.getIdPlayList()
-//                                + " to XML with filename: " + selectedFile.getName());
-//                    }
-//                    //Κάνουμε παραγωγή και εξαγωγή του XML αρχείου
-//                    controller.exportPlayListToXML(playList, selectedFile);
-//
-//                } else {
-//                    JOptionPane.showMessageDialog(this, "FileDefExportError", "Error", JOptionPane.ERROR_MESSAGE);
-//                }
-//            }
-//        }
+        u = new Utils();
+        File xmlFile = new File("C:\\temp\\workpermits.xml");
+        WorkpermitXML workpermitXMLWriter = new WorkpermitXML(xmlFile);     
+        u.exportWorkpermits(workpermitXMLWriter);        
     }//GEN-LAST:event_PBExtractXMLActionPerformed
+
+    private void PBStopSimActionPerformedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStopSimActionPerformedActionPerformed
+        
+        if (WPSimulationList==null) return;
+        
+        //Ενημέρωση οθόνης
+        SimLog.append("Εναρξη διαδικασίας παύσης των Threads...\n");
+        //Διακοπή των Thread
+        for (WorkPermitSimulation result : WPSimulationList) {
+            result.StopRun();
+        }
+    }//GEN-LAST:event_PBStopSimActionPerformedActionPerformed
         
     
 
@@ -446,6 +444,8 @@ public class FRM_Workpermit extends javax.swing.JFrame {
     private javax.swing.JButton PBExit;
     private javax.swing.JButton PBExtractXML;
     private javax.swing.JButton PBStartSim;
+    private javax.swing.JButton PBStopSimActionPerformed;
+    private java.awt.TextArea SimLog;
     private javax.swing.JTable TBAnal;
     private javax.swing.JTable TBSyg;
     private javax.swing.JLabel jLabel1;
