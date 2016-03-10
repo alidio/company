@@ -214,7 +214,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
                         .addComponent(PBStopSimActionPerformed)
                         .addGap(78, 78, 78)
                         .addComponent(PBExtractXML)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

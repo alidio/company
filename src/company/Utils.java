@@ -79,6 +79,22 @@ public class Utils {
         return WPList;                     
     }    
     
+    
+    //Επιστρέφει σε λίστα όλες τις εγγραφές του αρχείου
+    //Publicholidays
+    public List<Publicholidays> GetPublicholidaysList() {
+        //ερωτημα
+        String sqlqry = "select p from Publicholidays p ";
+
+        Query qry = em.createQuery(sqlqry, Publicholidays.class);
+
+        //Εκτέλεση ερωτήματος
+        List<Publicholidays> PList = qry.getResultList();
+
+        return PList;                     
+    }    
+    
+    
     //Απάντάει εάν υπάρχει ως Manager ο Employee της παραμέτρου
     synchronized public boolean chkManagerExist(Employee emp) {
         boolean retval=false;
@@ -204,21 +220,6 @@ public class Utils {
                                              "and wp.workPermitTypeId = :wptype " +
                                              "and wp.approved = 1 " +
                                              "group by wp.employeeId ",int.class);
-
-//            Query wpQuery = em.createQuery("select \n" +
-//                                           " (select coalesce(sum(wp.numdays),0) \n" +
-//                                           "    from Workpermit wp \n" +
-//                                           "   where wp.employeeId = e \n" +
-//                                           "     and wp.workPermitTypeId = :wptype \n" +
-//                                           "     and wp.approved = 1 \n" +
-//                                           "group by wp.employeeId), \n" +
-//                                           " (select max(wp1.todate) \n" +
-//                                           "    from Workpermit wp1   \n" +
-//                                           "   where wp1.approved = 1 \n" +
-//                                           "     and wp1.employeeId = e \n" +
-//                                           "group by wp1.employeeId) \n" +
-//                                           " from Employee e \n" +
-//                                           "where e = :emp",int.class);
             
                 wpQuery.setParameter("emp", emp);
                 wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());
