@@ -248,16 +248,21 @@ public class Utils {
                         maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
                     
                     
-                }else sumNdays=0;
-                
-System.out.println(emp.getLname()+ " " +awp.getWorkPermitTypeId().getWorkPermitTypeText()+" maxDate="+maxDate);                
+                }else sumNdays=0;                
 
                 //εάν υπάρχει υπόλοιπο AvailableDays - sumNdays > 0
+                //φτιάχνω τη δομή που θα κρατησει τα στοιχεία της άδειας
                 if (awp.getAvailableDays()>sumNdays) {
                     wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));                
                 }
+                
+                //Ενημέρωση της λίστας των αντικειμένων που κρατάνε την άδεια
+                //με την μεγαλύτερη (άρα και τελευταία) ημερομηνία που 
+                //πήρε εγκεκριμένη άδεια ο υπάλληλος.
+                for (RestWorkPermit r:wp){
+                    if (r.getMaxDate().before(maxDate)) r.setMaxDate(maxDate);
+                }
         }        
-System.out.println("-----------------------------------------------------------");        
         return wp;
     }
     

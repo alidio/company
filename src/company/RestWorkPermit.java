@@ -97,6 +97,9 @@ public class RestWorkPermit {
 
     public void setMaxDate(Date maxDate) {
         this.maxDate = maxDate;
+        
+        //Νέος υπολογισμός ημερομηνιών ΑΠΟ-ΕΩΣ
+        calcFromToDate();
     }
 
     public Employee getEmp() {
