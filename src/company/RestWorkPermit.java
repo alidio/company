@@ -4,6 +4,7 @@
 package company;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -51,7 +52,7 @@ public class RestWorkPermit {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
 
-        cal.set(year, 1, 1);
+        cal.set(year, Calendar.JANUARY, 1);
         retDate = cal.getTime();
         return retDate;   
     }
@@ -68,20 +69,26 @@ public class RestWorkPermit {
         //Επιστρέφει την επόμενη εργάσιμη ημέρα εάν η ημέρα
         //εισόδου είναι ημέρα διακοπών ή Σαββατοκύριακο.
         fromDate = chkIsHoliday(maxDate);
-        
+
         //Στην from date προσθέτω ένα τυχαίο άριθμό από το 1 έως το
         //υπόλοιπο άδειας που έχει για να προσθέσω την άδεια.
         numdays = rnd.nextInt(ypoloipo);
         if (numdays==0) numdays = 1;
 
-        toDate = ComputeToDateExcludeWeekends(fromDate,numdays);
+        //Η ημερομηνία έως προκείπτει έαν ελέγξουμε όλες τις ενδιάμεσες
+        //ημερομινίες για το εάν είναι σαββατοκύριακο ή ημέρα αργίας.
+        //Σε τέτοια περπιπτωση επιστρέφεται η επόμενη ημερομηνία.
+        //Ο κώδικας παρακάτω με τον τρόπο αυτό προσθέτει numdays 
+        //εργάσιμες ημέρες.
+        toDate = fromDate;
+        for (int i=0;i<numdays;i++){
+            toDate = chkIsHoliday(addDays(toDate,1));
+        }
         
         //Επιστρέφει την επόμενη εργάσιμη ημέρα εάν η ημέρα
         //εισόδου είναι ημέρα διακοπών ή Σαββατοκύριακο.
         toDate = chkIsHoliday(toDate);        
-        
-System.out.println("fromDate="+this.fromDate+" toDate="+toDate+" numdays="+numdays);
-        
+
     }
     
     public Date getMaxDate() {
@@ -148,33 +155,15 @@ System.out.println("fromDate="+this.fromDate+" toDate="+toDate+" numdays="+numda
         this.numdays = numdays;
     }   
     
-    //Στο διάστημα από έως προσθέτει 2 ημέρες για κάθε σαββατοκύριακο
-    //ο κωδικας προέρχεται από:
-    //http://www.coderanch.com/t/374845/java/java/Add-days-weekend-days
-    public Date ComputeToDateExcludeWeekends(Date FromDate, int days) {
-
-        Calendar time = new GregorianCalendar();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
-        time.setTime(FromDate);
-        for (int promise_days=days ; promise_days!=0 ; promise_days--) {
-            time.add(Calendar.DATE, 1);
-            if (time.get(Calendar.DAY_OF_WEEK)==7) {
-                //Saturday always comes first
-                time.add(Calendar.DATE, 2);
-            }
-        }
-        return time.getTime();
-    }
-    
+   
     //Εαν η ημέρα εισόδου είναι Σάββατο ή κυρική, επιστρέφεται 
     //η επόμενη εργάσιμη
     public Date chkIsWeekend(Date insDate) {
         Calendar time = new GregorianCalendar();
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
         time.setTime(insDate);
-        if (time.get(Calendar.DAY_OF_WEEK)==7) time.add(Calendar.DATE, 1);
-        if (time.get(Calendar.DAY_OF_WEEK)==6) time.add(Calendar.DATE, 2);
+        if (time.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY) time.add(Calendar.DATE, 1);
+        if (time.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY) time.add(Calendar.DATE, 2);
         return time.getTime();
     }
     
@@ -182,20 +171,17 @@ System.out.println("fromDate="+this.fromDate+" toDate="+toDate+" numdays="+numda
     //και εάν είναι τότε προσθέτει μια ημέρα,
     //κάνει τον ίδιο έλεγχο για την επόμενη ημέρα.
     public Date chkIsHoliday(Date inDate){        
-        boolean addAday;        
-        {
-            addAday = false;            
+        boolean addAday=true;       
+        while (addAday){
+            addAday = false;
             for(Publicholidays p:PList){
-                if (inDate.equals(p.getHolidaydate())) addAday = true;
+                if (removeTime(inDate).equals(removeTime(p.getHolidaydate()))) addAday = true;
             }
             if (addAday) inDate = addDays(inDate,1);
-            
             //Ελέγχος εάν είναι Σαββατοκύριακο η επόμενη ημερα
             inDate = chkIsWeekend(inDate);
-            
-        } while (addAday);        
-        
-        return inDate;        
+        }        
+        return inDate;
     }
     
     //Προσθέτει αριθμό ημερών σε μία ημερομηνία
@@ -207,5 +193,21 @@ System.out.println("fromDate="+this.fromDate+" toDate="+toDate+" numdays="+numda
         cal.add(Calendar.DAY_OF_MONTH, numDays);        
         
         return cal.getTime();
+    }
+    
+    //Αφαιρεί την πληροφορία της ώρας απο την ημερομηνία 
+    //για να μπορεί να γίνει σύγκριση ημερομηνιών.
+    //http://stackoverflow.com/questions/3144387/compare-two-dates-in-java
+    public Date removeTime(Date date) {
+        
+        Calendar cal = Calendar.getInstance();  
+        
+        cal.setTime(date);  
+        cal.set(Calendar.HOUR_OF_DAY, 0);  
+        cal.set(Calendar.MINUTE, 0);  
+        cal.set(Calendar.SECOND, 0);  
+        cal.set(Calendar.MILLISECOND, 0);  
+        
+        return cal.getTime();       
     }
 }

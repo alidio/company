@@ -2,6 +2,7 @@ package company;
 
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -205,8 +206,14 @@ public class Utils {
         //Kρατά τα υπόλοιπα αδειών από κάθε τύπο άδειας
         List<RestWorkPermit> wp = new ArrayList<>();
         
-        //Θα βρώ την τελευταία ημερομηνια (ΕΩΣ) που πήρε άδεια
-        Date maxDate=null;
+        //Θα βρώ την τελευταία ημερομηνια (ΕΩΣ) που πήρε οποιοδήποτε τύπο άδειας
+        
+        //Βάζω μια μικρή ημερομηνία (01/01) στο maxDate για να υπολογίζω 
+        //κάθε φορά τη μεγαλύτερη ημερομηνία.
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR), Calendar.JANUARY, 1);
+        Date maxDate = cal.getTime();
+        
         for (Availableworkpermit awp:AWPList){
             //Βρίσκει πόσες ημέρες έχει πάρει για κάθε τύπο άδειας που 
             //έχει δικαίωμα να δηλώσει.
@@ -222,7 +229,7 @@ public class Utils {
                                              "group by wp.employeeId ",int.class);
             
                 wpQuery.setParameter("emp", emp);
-                wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());
+                wpQuery.setParameter("wptype", awp.getWorkPermitTypeId());                
 
                 List sumNdaysList = new ArrayList<>();
 
@@ -235,20 +242,22 @@ public class Utils {
                 //άδεια για να υπολογίσω τη νέα άδεια απο την ημέρα αυτή και μετά.
                 int sumNdays;                
                 if (!sumNdaysList.isEmpty()) {
-                    sumNdays=(int)((Object[])sumNdaysList.get(0))[0];
-                    //maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
+                    sumNdays=(int)((Object[])sumNdaysList.get(0))[0];                    
                     
-                    if (maxDate==null)maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
-                    else if (!maxDate.after((Date)((Object[])sumNdaysList.get(0))[1])) 
+                    if (maxDate.before((Date)((Object[])sumNdaysList.get(0))[1])) 
                         maxDate=(Date)((Object[])sumNdaysList.get(0))[1];
                     
-                } else sumNdays=0;
+                    
+                }else sumNdays=0;
                 
+System.out.println(emp.getLname()+ " " +awp.getWorkPermitTypeId().getWorkPermitTypeText()+" maxDate="+maxDate);                
+
                 //εάν υπάρχει υπόλοιπο AvailableDays - sumNdays > 0
                 if (awp.getAvailableDays()>sumNdays) {
                     wp.add(new RestWorkPermit(emp,awp,sumNdays,maxDate));                
                 }
         }        
+System.out.println("-----------------------------------------------------------");        
         return wp;
     }
     
