@@ -291,8 +291,7 @@ public class Utils {
         TypedQuery<Workpermit> allWorkpermitsQuery = 
                 em.createNamedQuery("Workpermit.findAll", Workpermit.class);
         List<Workpermit> workpermitResults = allWorkpermitsQuery.getResultList();                    
-        workpermitXMLWriter.writeXML(workpermitResults);
-        System.out.println ( "Το αρχείο XML δημιουργήθηκε με επιτυχία στο C:\\temp" );                    
+        workpermitXMLWriter.writeXML(workpermitResults);        
     }
     
 }

@@ -5,6 +5,7 @@ import company.ThreadMonitor;
 import company.Utils;
 import company.WorkPermitSimulation;
 import company.WorkpermitXML;
+import static java.awt.image.ImageObserver.WIDTH;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import model.Employee;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class FRM_Workpermit extends javax.swing.JFrame {
     
@@ -311,6 +313,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_formWindowClosing
 
+    //Παρουσίαση γραμμών στο listBox με τα συγκεντρωτικά στοιχεία αιτημάτων αδειών
     synchronized public void fillTBSyg(){      
         // Ανακτούμε τα στοιχεία αδειών των υπαλλήλων της ΒΔ
         TypedQuery<Object[]> query = em.createQuery(
@@ -365,6 +368,7 @@ public class FRM_Workpermit extends javax.swing.JFrame {
         });
     }
     
+    //Παρουσίαση γραμμών στο listBox με τα αναλυτικά στοιχεία αιτημάτων αδειών
     synchronized public void fillTBAnal(){       
         
         int row = TBSyg.getSelectedRow();
@@ -415,15 +419,21 @@ public class FRM_Workpermit extends javax.swing.JFrame {
             i++;
         }
     }
-    
+
+    //Ενημέρωση του TextBox της οθόνης με τα αποτελέσματα της καταστασης 
+    //των thread
     public void updSimLog(String str){
         SimLog.append(str);
     }
+    
+    //Δημιουργία αρχείου XML. Το αρχείο δημιουργείται στο folder c:\temp.
+    //Θα πρέπει να υπάρχει αυτό το folder στον δίσκο.
     private void PBExtractXMLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBExtractXMLActionPerformed
         u = new Utils();
         File xmlFile = new File("C:\\temp\\workpermits.xml");
         WorkpermitXML workpermitXMLWriter = new WorkpermitXML(xmlFile);     
-        u.exportWorkpermits(workpermitXMLWriter);        
+        u.exportWorkpermits(workpermitXMLWriter);    
+        JOptionPane.showMessageDialog(this, "Το αρχείο XML δημιουργήθηκε με επιτυχία στο C:\\temp", null, WIDTH, null);
     }//GEN-LAST:event_PBExtractXMLActionPerformed
 
     private void PBStopSimActionPerformedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PBStopSimActionPerformedActionPerformed
