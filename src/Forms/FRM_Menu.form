@@ -174,7 +174,7 @@
           <Font name="Tahoma" size="14" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="&#x391;&#x3bb;&#x3b9;&#x3b2;&#x3b9;&#x3b6;&#x3b1;&#x3c4;&#x3bf;&#x3c2; &#x394;&#x3b9;&#x3bf;&#x3bd;&#x3cd;&#x3c3;&#x3b9;&#x3bf;&#x3c2;"/>
+        <Property name="text" type="java.lang.String" value="&#x391;&#x3bb;&#x3b9;&#x3b2;&#x3b9;&#x3b6;&#x3ac;&#x3c4;&#x3bf;&#x3c2; &#x394;&#x3b9;&#x3bf;&#x3bd;&#x3cd;&#x3c3;&#x3b9;&#x3bf;&#x3c2;"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">

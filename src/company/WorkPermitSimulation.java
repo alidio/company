@@ -1,3 +1,5 @@
+//Ο κώδικας του κάθε thread. 
+//Για καθε εργαζόμενο δημιουργείται ένα αντικείμενο τέτοιου τύπου.
 package company;
 
 import java.util.ArrayList;

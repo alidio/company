@@ -8,8 +8,7 @@ import javax.swing.JFrame;
 
 /**
  * Κλάση για τη εποπτεία του τρόπου κλεισίματος των φορμών
- * 
- * @author periklis  - Από την 3η ΕΡΓΑΣΙΑ 2014-2015
+ * Από την 3η ΕΡΓΑΣΙΑ 2014-2015
 */
 public class MyWindowEvent extends WindowEvent {
 

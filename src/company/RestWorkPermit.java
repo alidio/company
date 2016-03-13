@@ -1,10 +1,9 @@
-//Η κλάση αυτή χρησημοποιείται για να κρατά τα υπόλοιπα
+//Η κλάση αυτή χρησιμοποιείται για να κρατά τα υπόλοιπα
 //αδειών για κάθε τύπο άδειας. Υπολογίζει αυτόματα τις ημερομηνίες από έως 
 //για την καταχώριση της άδειας.
 package company;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
